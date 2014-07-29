@@ -53,15 +53,25 @@ class UsersController extends BaseController {
 	            ->where('cities.state', '=', $state)
 	            ->where('cities.name', '=', $city)
 	            ->get();
-
+               
 	            if($city[0]->id) {
+                    $cid = $city[0]->id;
 
-	            	$cid = $city[0]->id;
+                    // saving some time as its a code test and just running this in the
+                    // place of a building a custom validator on the composit keys.
+                    $uniqueCheck = DB::table('visited')
+                    ->where('uid', '=', $id)
+                    ->where('cid', '=', $cid)
+                    ->first();
 
-	            	$visited = new Visited;
-	            	$visited->uid = $id;
-	            	$visited->cid = $cid;
-	            	$visited->save();
+                    if(!$uniqueCheck)
+                    {
+                        $visited = new Visited;
+                        $visited->uid = $id;
+                        $visited->cid = $cid;
+                        $visited->save();
+                    }
+	            	
 	            }
 			}
         		// done and done

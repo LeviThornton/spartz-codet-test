@@ -60,11 +60,11 @@ class StatesController extends BaseController {
              cities in the area, including the one we posted with above, 
              did we want that excluded(?)
              */
-             $output = DB::select( DB::raw("SELECT *, ( 3959 * acos ( cos ( radians(".$latitude.") )
+             $output = DB::select( DB::raw("SELECT *, ( 3959 * acos ( cos ( radians(:latitude) )
                         * cos( radians( latitude ) ) * cos( radians( longitude )
-                        - radians(".$longitude.") ) + sin ( radians(".$latitude.") )
+                        - radians(:longitude) ) + sin ( radians(:latitude) )
                         * sin( radians( latitude ) ) )) AS distance FROM cities HAVING distance <= :miles"), 
-                array('miles' => $radius));
+                array('miles' => $radius), "longitude" => $longitude, "latitude" => $latitude);
 
 
             } else $output = array("success"=>false,"message"=>"Failed to match city");
